@@ -63,6 +63,26 @@ ggplot(narrowwle, aes(x = Index, y = Value, group = classe, color = classe)) +
   facet_wrap(~Measure, nrow = 2)
 ```
 
+### Model the data
+
+For the current dataset, we face a **Classification** problem. We started with a dataset of `r ncol(train)` feature set and having `r nrow(train)` samples. Cursory glance gave us that 1st variable is an index, followed by subject identifier. These were excluded from the training dataset.
+
+Then 3 variables were timestamps, we decided to ignore those. Next 2 variables were some windowing indicator. We decide to drop those 2 also.
+
+Next we found that **67 features** has **~98% missing/empty values**. We dropped those features readily.
+
+COnversion during to `character` had rendered some more features having `numeric` data to evade the previous sifting. Converting all the `character` column to `numeric` enabled us to do another round of sifting. This time we found **34 features** has **97% - 98% missing/empty values**. We dropped those features.
+
+**Final pruned training dataset had 52 numeric features and 1 factor variable. The factor variable is the predicate variable.**
+
+We first tried a `Linear Discriminant` model, with 10 fold cross validation. This gave `r floor(lda.wle1$results$Accuracy*100)`% Accuracy on the training set.
+
+Next we tried a `Random Forest` classifier, with setting out-of-bag tries to 4. The final random forest selected had `number of variable per level` set to 2 and had Accuracy of `r round(rf.wletrain$results$Accuracy[1]*100, 2)`%.
+
+Because of higher accuracy we selected the final `Random Forest` as our classifier. This model gave 100% matching (accepted) prediction on the test dataset.
+
+We also ran `SVM` and `RDA` on the training dataset, but they fared similar to the `LDA` model.
+
 
 ### Summary of the final model
 

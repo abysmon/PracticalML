@@ -55,7 +55,7 @@ feature.matrix = as.matrix(wled.train[ ,-53]) # has only numeric/integer variabl
 
 ##### Visualize the extracted dataset ####
 
-options(max.print = 500)
+options(max.print = 1000)
 
 table(num.train$classe, num.train$user_name)
 
@@ -97,9 +97,7 @@ rf.wletrain
 ##### Try the fitted the model(s) ####
 
 # remove from test dataset the features removed from train dataset
-orig.names = colnames(train)
-snip.names = colnames(num.train)
-cleantest = test[ ,which(orig.names %in% snip.names, arr.ind = T)]
+cleantest = test[ ,which(colnames(train) %in% colnames(num.train), arr.ind = T)]
 cleantest = cleantest[ ,-54]
 cleantest$user_name = factor(cleantest$user_name)
 wled.test = cleantest[ ,-1]
@@ -108,10 +106,11 @@ wled.test = cleantest[ ,-1]
 wlep.lda = predict(lda.wle1, newdata = wled.test) # the other lda model gives similar performance
 
 # pred rf
-wlep.rf = predict(rf.wle, newdata = wled.test)
+wlep.rf = predict(rf.wletrain, newdata = wled.test)
 rf.res = as.character(wlep.rf)
 
-wlep.rf = predict(rf.wletrain$finalModel, newdata = wled.test)
+
+
 
 ##### Visualize the models ####
 
@@ -120,3 +119,4 @@ plot(varImp(rf.wletrain), col = "red", top = 20)
 
 rf.wletrain # Overall fitting summary
 rf.wletrain$finalModel # Fitted model summary
+
