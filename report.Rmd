@@ -49,7 +49,8 @@ t(apply(feature.matrix, 2, quantile))
 
 
 **Distribution of each feature, limiting the y-axis to ignore the minimum outlier**
-```{r, echo=FALSE, dpi=200, dev.args=list(pointsize=8)}
+```{r, echo=FALSE, fig.width=11}
+par(mar = c(9,3,0.5,0.5))
 nab = min(feature.matrix[feature.matrix != min(feature.matrix)])
 mab = max(feature.matrix)
 boxplot(feature.matrix, las = 2, ylim = c(nab-1, mab+1), )
